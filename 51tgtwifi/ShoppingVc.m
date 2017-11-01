@@ -192,7 +192,7 @@
     _tableView.delegate = self;
     _tableView.dataSource = self;
     
-    _tableView.rowHeight = 100;
+    _tableView.rowHeight = 270;
     
     [self.view addSubview:_tableView];
     
@@ -222,25 +222,6 @@
     cell.model = _arr[indexPath.row];
     
     
-    UIButton *btn = [UIButton new];
-    [cell addSubview:btn];
-    
-    [btn mas_makeConstraints:^(MASConstraintMaker *make) {
-       
-        make.right.equalTo(cell).with.offset(-30);
-        make.bottom.equalTo(cell).with.offset(0);
-        make.width.mas_equalTo(@100);
-        make.height.mas_equalTo(@30);
-        
-    }];
-    
-    [btn setTitle:@"了解详情 >" forState:UIControlStateNormal];
-    
-    [btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    
-    btn.tag = 100+indexPath.row;
-    
-    [btn addTarget:self action:@selector(buy:) forControlEvents:UIControlEventTouchUpInside];
     
     
     return cell;
@@ -248,56 +229,24 @@
 
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    ShopTabCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     
     //   点击闪一闪
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
 
   
+     DetailVc *vc = [[DetailVc alloc]init];
+    
+    vc.DetailUrl =  ((ProductMo *)_arr[indexPath.row]).url;
+    vc.DetailTitle =  ((ProductMo *)_arr[indexPath.row]).title;
+    vc.type =  ((ProductMo *)_arr[indexPath.row]).price_type;
+    vc.price = [NSString stringWithFormat:@"%@",[NSNumber numberWithInteger:cell.model.price]];
+    
+    [self.navigationController pushViewController:vc animated:YES];
+
     
 }
 
-
--(void)buy:(UIButton *)btn{
-    DetailVc *vc = [[DetailVc alloc]init];
-    if (btn.tag==100) {
-         NSLog(@"100点击成功！！");
-        vc.DetailUrl =  ((ProductMo *)_arr[btn.tag-100]).url;
-        
-        [self.navigationController pushViewController:vc animated:YES];
-                
-        
-    }
-    else if (btn.tag==101) {
-        NSLog(@"101点击成功！！");
-        vc.DetailUrl =  ((ProductMo *)_arr[btn.tag-100]).url;
-        
-        [self.navigationController pushViewController:vc animated:YES];
-    }
-    else if (btn.tag==102) {
-        NSLog(@"102点击成功！！");
-        vc.DetailUrl =  ((ProductMo *)_arr[btn.tag-100]).url;
-        
-        [self.navigationController pushViewController:vc animated:YES];
-    }
-    else if (btn.tag==103) {
-        NSLog(@"103点击成功！！");
-    }
-    
-//    //    配置paypal支付
-//    [self payPal];
-    
-    
-//    PayViewController *vc = [[PayViewController alloc]init];
-//    [self.navigationController pushViewController:vc animated:YES];
-   
-
-
-    
-    
-
-
-}
 
 -(void)payPal{
 //    配置支付环境

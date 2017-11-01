@@ -12,4 +12,12 @@
 
 @property(nonatomic,strong)NSString *DetailUrl;
 
+@property(nonatomic,strong)NSString *DetailTitle;
+
+@property(nonatomic,strong)NSString *type;
+
+@property(nonatomic,strong)NSString *price;
+
+
+
 @end

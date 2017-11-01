@@ -78,13 +78,14 @@
     TitleText = [UILabel new];
     [_TitleView addSubview:TitleText];
     
-    TitleText.text = @"";
+    TitleText.text = self.DetailTitle;
     TitleText.textColor = [UIColor whiteColor];
+    TitleText.numberOfLines = 0;
     
     [TitleText mas_makeConstraints:^(MASConstraintMaker *make) {
         
         make.center.equalTo(_TitleView);
-        make.size.mas_equalTo(CGSizeMake(100, 100));
+        make.size.mas_equalTo(CGSizeMake(200, 100));
     }];
     
     TitleText.textAlignment = NSTextAlignmentCenter;
@@ -142,23 +143,73 @@
     [self.view addSubview:btn];
     
     [btn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.equalTo(_TitleView).offset(0);
+        make.right.equalTo(self.view).offset(0);
+        make.bottom.equalTo(self.view).offset(0);
         
-        make.centerY.equalTo(TitleText);
+        make.width.mas_equalTo(@150);
+        make.height.mas_equalTo(@70);
         
-        make.size.mas_equalTo(CGSizeMake(100, 100));
-        
-        
+
     }];
     
     btn.tag = 102;
     btn.titleLabel.textAlignment = NSTextAlignmentLeft;
-    [btn setTitle:@"购买流量" forState:UIControlStateNormal];
+    [btn setTitle:@"立刻购买" forState:UIControlStateNormal];
     [btn addTarget:self action:@selector(click:) forControlEvents:UIControlEventTouchUpInside];
-//    [btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-//    btn.backgroundColor = [UIColor orangeColor];
-    btn.layer.cornerRadius = 10;
-
+    [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    btn.backgroundColor = [UIColor orangeColor];
+//    btn.layer.cornerRadius = 10;
+    
+    
+    UIView *view = [[UIView alloc]init];
+    [self.view addSubview:view];
+    
+    [view mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.view).offset(0);
+        make.bottom.equalTo(self.view).offset(0);
+        
+        make.width.mas_equalTo(@(XScreenWidth-150));
+        make.height.mas_equalTo(@70);
+        
+        
+    }];
+    
+    view.backgroundColor = [UIColor blackColor];
+    
+    UILabel *_typeLab = [[UILabel alloc]init];
+    [view addSubview:_typeLab];
+    
+    [_typeLab mas_makeConstraints:^(MASConstraintMaker *make) {
+       
+        make.left.equalTo(view).offset(30);
+        make.centerY.equalTo(view);
+        make.size.mas_equalTo(CGSizeMake(50, 40));
+        
+        
+        
+    }];
+    
+    _typeLab.text = self.type;
+    _typeLab.textColor = [UIColor  orangeColor];
+    
+    
+    UILabel *_priceLab = [[UILabel alloc]init];
+    [view addSubview:_priceLab];
+    
+    [_priceLab mas_makeConstraints:^(MASConstraintMaker *make) {
+        
+        make.left.equalTo(_typeLab).offset(35);
+        make.centerY.equalTo(view);
+        make.size.mas_equalTo(CGSizeMake(80, 40));
+        
+        
+        
+    }];
+    
+    _priceLab.text = self.price;
+    _priceLab.textColor = [UIColor  orangeColor];
+    _priceLab.font = [UIFont systemFontOfSize:22];
+    
     
 }
 

@@ -128,7 +128,7 @@
 -(UILabel *)subPriceLabel
 {
     if (!_subPriceLabel) {
-        _subPriceLabel = [UILabel labelWithText:@"￥30" atColor:Red_Color atTextSize:15 atTextFontForType:Common_Font];
+        _subPriceLabel = [UILabel labelWithText:@"￥0.01" atColor:Red_Color atTextSize:15 atTextFontForType:Common_Font];
         [self addSubview:_subPriceLabel];
     }
     return _subPriceLabel;

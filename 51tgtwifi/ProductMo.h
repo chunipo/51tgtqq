@@ -12,12 +12,13 @@
 
 @property(nonatomic,strong)NSString *cover_image_url; //覆盖tableview 上
 
+@property(nonatomic,strong)NSString *title;
 
 @property(nonatomic,strong)NSString *ProductId;
 
 @property(nonatomic,strong)NSString *money_type; //货币类型
 
-@property(nonatomic,strong)NSString *price;//价格
+@property(nonatomic,assign)NSInteger price;//价格
 
 @property(nonatomic,strong)NSString *price_type;//支付类型
 

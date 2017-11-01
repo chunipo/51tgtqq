@@ -9,10 +9,23 @@
 #import "BluetrueViewController.h"
 
 #import <CoreBluetooth/CoreBluetooth.h>
-#define kServiceUUID @"C4FB2349-72FE-4CA2-94D6-1F3CB16331EE" //服务的UUID
-#define kCharacteristicUUID @"6A3E4B28-522D-4B3B-82A9-D5E2004534FC" //特征的UUID
+#define kServiceUUID @"49535343-FE7D-4AE5-8FA9-9FAFD205E455" //服务的UUID
+#define kCharacteristicUUID @"444E414C-4933-4543-AE2E-F30CB91BB70D" //特征的UUID
 
-@interface BluetrueViewController ()<CBCentralManagerDelegate,CBPeripheralDelegate>
+@interface BluetrueViewController ()<CBCentralManagerDelegate,CBPeripheralDelegate,UITableViewDelegate,UITableViewDataSource>
+
+{
+    UITableView       *_tableView;
+    
+    NSMutableArray    *_arr;
+    
+    
+    NSString          *_peripName;
+    
+    
+    BOOL              isEqul  ;
+}
+
 
 /* 中心管理者 */
  @property (nonatomic, strong) CBCentralManager *cMgr;
@@ -62,6 +75,8 @@
             NSLog(@"CBCentralManagerStatePoweredOn");//蓝牙已开启
             // 在中心管理者成功开启后再进行一些操作
             // 搜索外设
+            
+           
             [self.cMgr scanForPeripheralsWithServices:nil // 通过某些服务筛选外设
                                               options:nil]; // dict,条件
             // 搜索成功之后,会调用我们找到外设的代理方法
@@ -80,7 +95,26 @@
                   RSSI:(NSNumber *)RSSI // 外设发出的蓝牙信号强度
 {
 
-    NSLog(@"peripheral.name####%@。信号强度###%@",peripheral.name,RSSI);
+    NSLog(@"peripheral.name####%@。信号强度###%@",peripheral,RSSI);
+    
+    if (peripheral.name) {
+        
+        for (NSString *str in _arr) {
+            if ([str isEqualToString:peripheral.name]) {
+                isEqul = YES;
+                break;
+            }else{
+                
+                isEqul = NO;
+            }
+              
+        }
+        if (isEqul == NO) {
+            [_arr addObject:peripheral.name];
+        }
+        
+    }
+    [_tableView reloadData];
     
     /*
      peripheral = , advertisementData = {
@@ -103,7 +137,7 @@
     // 在此时我们的过滤规则是:有OBand前缀并且信号强度大于35
     // 通过打印,我们知道RSSI一般是带-的
     
-    if ([peripheral.name hasPrefix:@"CZYIphone"]) {
+    if ([peripheral.name hasPrefix:@"途鸽翻译机"]) {
         // 在此处对我们的 advertisementData(外设携带的广播数据) 进行一些处理
         
         // 通常通过过滤,我们会得到一些外设,然后将外设储存到我们的可变数组中,
@@ -211,7 +245,7 @@
     NSNumber* rssi = [peripheral RSSI];
     
     //读取BLE4.0设备的电量
-    if([characteristic.UUID isEqual:[CBUUID UUIDWithString:@"0000fff4-0000-1000-8000-00805f9b34fb"]]){
+    if([characteristic.UUID isEqual:[CBUUID UUIDWithString:@"49535343-FE7D-4AE5-8FA9-9FAFD205E455"]]){
         NSData* data = characteristic.value;
         NSString* value = [self hexadecimalString:data];
         NSLog(@"characteristic(读取到的) : %@, data : %@, value : %@", characteristic, data, value);
@@ -251,14 +285,101 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    _arr = [NSMutableArray arrayWithCapacity:0];
+    _peripName = @"rrrrrrrrrrrrrrrr";
+    isEqul = NO;
     
-    self.cMgr = [[CBCentralManager alloc] initWithDelegate:self queue:nil];
+    
+    [self createCmgr];
+    
+    
+    [self createTable];
     
 }
+
+-(void)createCmgr{
+    self.cMgr = [[CBCentralManager alloc] initWithDelegate:self queue:nil];
+
+}
+
+-(void)createTable{
+    
+    _tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 20+60, XScreenWidth, XScreenHeight-40-64-25) style:UITableViewStylePlain];
+    
+    _tableView.delegate = self;
+    _tableView.dataSource = self;
+    
+    _tableView.rowHeight = 100;
+    
+    [self.view addSubview:_tableView];
+
+
+
+}
+
+-(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
+    return 1;
+}
+
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    return _arr.count;
+    
+}
+
+-(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    static NSString *str = @"idd";
+    
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:str];
+    
+    
+    if (!cell) {
+        cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:str];
+    }
+    
+    //     cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    
+    
+    cell.textLabel.text = _arr[indexPath.row];
+    
+    
+    
+    //    设置右边箭头
+    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    
+    //    设置左边小图标
+    //    NSArray *images = @[@[@"",@"",@"",@"",@"",@""],@[@"",@"",@"",@""]];
+    //
+    //    cell.imageView.image = [UIImage imageNamed:images[indexPath.section][indexPath.row]];
+    
+    
+    return cell;
+    
+    
+}
+
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    
+    _peripName = cell.textLabel.text;
+    //   点击闪一闪
+    [tableView deselectRowAtIndexPath:indexPath animated:NO];
+    
+    [self dismissCmgr];
+    
+    [self createCmgr];
+    
+}
+
+-(void)dismissCmgr{
+    self.cMgr = nil;
+}
+
+
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+    
 }
 
 /*

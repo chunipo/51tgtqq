@@ -89,7 +89,7 @@
     //extern NSString * _Nonnull const PayPalEnvironmentSandbox;
     /// 无网络连接环境-具体用处
     //extern NSString * _Nonnull const PayPalEnvironmentNoNetwork;
-    [PayPalMobile preconnectWithEnvironment:PayPalEnvironmentSandbox];
+    [PayPalMobile preconnectWithEnvironment:PayPalEnvironmentProduction];
 }
 
 
@@ -236,7 +236,7 @@
 -(void)payPal{
 
     PayPalPayment *payment = [[PayPalPayment alloc] init];
-    payment.amount = [[NSDecimalNumber alloc] initWithString:@"10.01"];//金额
+    payment.amount = [[NSDecimalNumber alloc] initWithString:@"0.01"];//金额
     payment.currencyCode = @"USD";//货币类型
     payment.shortDescription = @"100M 流量";
     payment.intent = PayPalPaymentIntentSale;
@@ -421,6 +421,9 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+    
+    
+    
 }
 
 /*

@@ -49,7 +49,7 @@
     NSArray *arr1 = @[str1,str2,str3];
     
     
-    NSArray *arr2 = @[@"HomeViewController",@"ShoppingVc",@"SetViewController"];
+    NSArray *arr2 = @[@"BluetrueViewController",@"ShoppingVc",@"SetViewController"];
     
  
     

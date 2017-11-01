@@ -123,6 +123,7 @@
         } else if ([action isEqualToString:@"web"]) {
             // 进入到 web 活动页
 //            [self.rootVC transferToWebVCWithUrlString:@"webTest"];
+            
         }
     }
     return  YES;
